@@ -51,29 +51,30 @@ namespace FQ24L007B.CrowdFunding.Api.Controllers
         public IActionResult Delete(int contrepartieId, int projetId)
         {
             Projet? projet = _context.Projets.Find(projetId);
-
-            if (projet is null)
+            if (projet == null)
             {
                 return NotFound("Projet non trouvé");
             }
-            
-            Contrepartie? contrepartie = _context.Contreparties.Find(contrepartieId);
 
-            if (contrepartie is null)
+            Contrepartie? contrepartie = _context.Contreparties.Find(contrepartieId);
+            if (contrepartie == null)
             {
                 return NotFound("Contrepartie non trouvée.");
             }
 
-            List<Contrepartie> listeContrepartie = _context.Contreparties.ToList();
+            if (!projet.Contreparties.Contains(contrepartie))
+            {
+                return BadRequest("La contrepartie spécifiée n'est pas liée à ce projet.");
+            }
 
-            if (listeContrepartie.Count == 1)
+            if (_context.Contreparties.Count(c => c.ProjetId == projetId) <= 1)
             {
                 return BadRequest("Vous ne pouvez pas supprimer la dernière contrepartie de ce projet.");
             }
 
             _context.Contreparties.Remove(contrepartie);
             _context.SaveChanges();
-            
+
             return NoContent();
         }
     }
