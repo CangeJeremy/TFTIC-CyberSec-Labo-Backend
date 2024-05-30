@@ -1,0 +1,6 @@
+@FQ24L007B.CrowdFunding.Api_HostAddress = http://localhost:5145
+
+GET {{FQ24L007B.CrowdFunding.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
